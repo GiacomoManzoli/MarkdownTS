@@ -1,0 +1,27 @@
+{
+  "name": "MarkdownTS",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "dev": "webpack",
+    "watch": "webpack --watch",
+    "serve": "http-server -p 9001"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^23.3.10",
+    "awesome-typescript-loader": "^5.2.1",
+    "jest": "^23.6.0",
+    "source-map-loader": "^0.2.4",
+    "ts-jest": "^23.10.5",
+    "ts-loader": "^5.3.1",
+    "tsify": "^4.0.1",
+    "typescript": "^3.2.2",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2"
+  }
+}
