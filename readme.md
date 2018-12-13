@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/GiacomoManzoli/MarkdownTS.svg?branch=master)](https://travis-ci.com/GiacomoManzoli/MarkdownTS)
+
 # MarkdownTS
 
 A dead simple, pluggable and modular Markdown parser written in TypeScript.
