@@ -1,2 +1,740 @@
-!function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports.MarkdownTS=t():e.MarkdownTS=t()}(window,function(){return function(e){var t={};function r(n){if(t[n])return t[n].exports;var o=t[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,r),o.l=!0,o.exports}return r.m=e,r.c=t,r.d=function(e,t,n){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:n})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var o in e)r.d(n,o,function(t){return e[t]}.bind(null,o));return n},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="",r(r.s=2)}([function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=function(){function e(e){this.regex=e}return e.prototype.applyTo=function(e){var t=e.replace(this.regex,this.replace.bind(this));return this.afterReplace(t)},e.prototype.replace=function(e){for(var t=[],r=1;r<arguments.length;r++)t[r-1]=arguments[r];throw new Error("asd")},e.prototype.afterReplace=function(e){return e},e}();t.ParsingRule=n},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=r(4),o=function(){function e(e){this.rules=e.slice()}return e.prototype.addRule=function(e){return this.rules.push(e),this},e.prototype.parseMarkdown=function(e){var t=e;return this.rules.forEach(function(e){t=e.applyTo(t)}),t},e.createDefaultParser=function(){return new e([new n.TitleRule,new n.ImageRule,new n.HyperLinkRule,new n.BoldRule,new n.ItalicRule,new n.StrikeRule,new n.QuoteRule,new n.LineRule,new n.InlineCodeRule,new n.ListRule,new n.CodeBlockRule])},e}();t.Parser=o},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=r(3);t.Engine=n.Engine;var o=r(1);t.Parser=o.Parser},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=r(1),o=function(){function e(e){this.parser=void 0!==e?e:n.Parser.createDefaultParser()}return e.prototype.render=function(e){return this.parser.parseMarkdown(e)},e}();t.Engine=o},function(e,t,r){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=r(0);t.ParsingRule=n.ParsingRule;var o=r(5);t.TitleRule=o.TitleRule;var u=r(6);t.ImageRule=u.ImageRule;var i=r(7);t.QuoteRule=i.QuoteRule,t.BoldRule=i.BoldRule,t.ItalicRule=i.ItalicRule,t.StrikeRule=i.StrikeRule,t.InlineCodeRule=i.InlineCodeRule;var c=r(8);t.HyperLinkRule=c.HyperLinkRule;var l=r(9);t.ListRule=l.ListRule;var a=r(10);t.LineRule=a.LineRule;var s=r(11);t.CodeBlockRule=s.CodeBlockRule},function(e,t,r){"use strict";var n,o=this&&this.__extends||(n=function(e,t){return(n=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])})(e,t)},function(e,t){function r(){this.constructor=e}n(e,t),e.prototype=null===t?Object.create(t):(r.prototype=t.prototype,new r)});Object.defineProperty(t,"__esModule",{value:!0});var u=function(e){function t(){return e.call(this,/(#+)(.*)/g)||this}return o(t,e),t.prototype.replace=function(e,t,r){var n=t.length;return"<h"+n+">"+r.trim()+"</h"+n+">"},t}(r(0).ParsingRule);t.TitleRule=u},function(e,t,r){"use strict";var n,o=this&&this.__extends||(n=function(e,t){return(n=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])})(e,t)},function(e,t){function r(){this.constructor=e}n(e,t),e.prototype=null===t?Object.create(t):(r.prototype=t.prototype,new r)});Object.defineProperty(t,"__esModule",{value:!0});var u=function(e){function t(){return e.call(this,/!\[([^[]+)\]\(([^)]+)\)/g)||this}return o(t,e),t.prototype.replace=function(e,t,r){return'<img src="'+r+'" alt="'+t+'" />'},t}(r(0).ParsingRule);t.ImageRule=u},function(e,t,r){"use strict";var n,o=this&&this.__extends||(n=function(e,t){return(n=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])})(e,t)},function(e,t){function r(){this.constructor=e}n(e,t),e.prototype=null===t?Object.create(t):(r.prototype=t.prototype,new r)});Object.defineProperty(t,"__esModule",{value:!0});var u=r(0),i=function(e){function t(t,r,n){var o=e.call(this,t)||this;return o.tagOpen=r,o.tagClose=n,o}return o(t,e),t.prototype.replace=function(e,t){return""+this.tagOpen+t+this.tagClose},t}(u.ParsingRule),c=function(e){function t(){return e.call(this,/(\*\*|__)(.*?)\1/g)||this}return o(t,e),t.prototype.replace=function(e,t,r){return"<strong>"+r+"</strong>"},t}(u.ParsingRule);t.BoldRule=c;var l=function(e){function t(){return e.call(this,/(\*|_)(.*?)\1/g)||this}return o(t,e),t.prototype.replace=function(e,t,r){return"<em>"+r+"</em>"},t}(u.ParsingRule);t.ItalicRule=l;var a=function(e){function t(){return e.call(this,/~~(.*?)~~/g,"<del>","</del>")||this}return o(t,e),t}(i);t.StrikeRule=a;var s=function(e){function t(){return e.call(this,/`([^`\n]+)`/g,"<code>","</code>")||this}return o(t,e),t}(i);t.InlineCodeRule=s;var p=function(e){function t(){return e.call(this,/:"(.*?)":/g,"<q>","</q>")||this}return o(t,e),t}(i);t.QuoteRule=p},function(e,t,r){"use strict";var n,o=this&&this.__extends||(n=function(e,t){return(n=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])})(e,t)},function(e,t){function r(){this.constructor=e}n(e,t),e.prototype=null===t?Object.create(t):(r.prototype=t.prototype,new r)});Object.defineProperty(t,"__esModule",{value:!0});var u=function(e){function t(){return e.call(this,/\[([^[]+)\]\(([^)]+)\)/g)||this}return o(t,e),t.prototype.replace=function(e,t,r){return'<a href="'+r+'">'+t+"</a>"},t}(r(0).ParsingRule);t.HyperLinkRule=u},function(e,t,r){"use strict";var n,o=this&&this.__extends||(n=function(e,t){return(n=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])})(e,t)},function(e,t){function r(){this.constructor=e}n(e,t),e.prototype=null===t?Object.create(t):(r.prototype=t.prototype,new r)});Object.defineProperty(t,"__esModule",{value:!0});var u=function(e){function t(){var t=this;return(t=e.call(this,/\n?\n?(^(\t{0,})(\*|-|\d.).*\n?)+/gm)||this).listRegex=/^(\t{0,})(\*|-|\d.)\s(.*)/gm,t.maxLevel=0,t.replaceList=t.replaceList.bind(t),t}return o(t,e),t.prototype.replace=function(e){return e.replace(this.listRegex,this.replaceList).trim()},t.prototype.replaceList=function(e,t,r,n){var o=t.length+1;this.maxLevel=Math.max(o,this.maxLevel);var u="*"===r||"-"===r?"ul":"ol",i="</li></"+u+">";return("<"+u+"><li>").repeat(o)+"<span>"+n+"</span>"+i.repeat(o)+"\n"},t.prototype.afterReplace=function(e){for(var t=1;t<=this.maxLevel;t++)e=(e=(e=(e=(e=(e=e.replace(/\<\/ul>\s*\<ul>/gm,"")).replace(/\<\/ul>\s*\<ol>/gm,"")).replace(/\<\/ol>\s*\<ol>/gm,"")).replace(/\<\/ol>\s*\<ul>/gm,"")).replace(/\<\/li>\s*\<li>\s*\<ul>/gm,"<ul>")).replace(/\<\/li>\s*\<li>\s*\<ol>/gm,"<ol>");return"\n"+e.trim()+"\n"},t}(r(0).ParsingRule);t.ListRule=u},function(e,t,r){"use strict";var n,o=this&&this.__extends||(n=function(e,t){return(n=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])})(e,t)},function(e,t){function r(){this.constructor=e}n(e,t),e.prototype=null===t?Object.create(t):(r.prototype=t.prototype,new r)});Object.defineProperty(t,"__esModule",{value:!0});var u=function(e){function t(){return e.call(this,/\n-{3,}/g)||this}return o(t,e),t.prototype.replace=function(){return"<hr />"},t}(r(0).ParsingRule);t.LineRule=u},function(e,t,r){"use strict";var n,o=this&&this.__extends||(n=function(e,t){return(n=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])})(e,t)},function(e,t){function r(){this.constructor=e}n(e,t),e.prototype=null===t?Object.create(t):(r.prototype=t.prototype,new r)});Object.defineProperty(t,"__esModule",{value:!0});var u=r(0),i=function(){function e(){}return e.prototype.renderCode=function(e,t){return'<pre class="'+e+'">'+t+"</pre>"},e}();t.PlainCodeBlockRenderer=i;var c=function(e){function t(t){void 0===t&&(t=new i);var r=e.call(this,/```([a-z]*)\n([\s\S]*?)\n```/g)||this;return r.codeRenderer=t,r}return o(t,e),t.prototype.replace=function(e,t,r){return this.codeRenderer.renderCode(t,r)},t}(u.ParsingRule);t.CodeBlockRule=c}])});
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["MarkdownTS"] = factory();
+	else
+		root["MarkdownTS"] = factory();
+})(window, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.ts");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./src/engine.ts":
+/*!***********************!*\
+  !*** ./src/engine.ts ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var parser_1 = __webpack_require__(/*! ./parser */ "./src/parser.ts");
+var Engine = /** @class */ (function () {
+    function Engine(parser) {
+        this.parser = parser !== undefined ? parser : parser_1.Parser.createDefaultParser();
+    }
+    Engine.prototype.render = function (markdown) {
+        return this.parser.parseMarkdown(markdown);
+    };
+    return Engine;
+}());
+exports.Engine = Engine;
+
+
+/***/ }),
+
+/***/ "./src/index.ts":
+/*!**********************!*\
+  !*** ./src/index.ts ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var engine_1 = __webpack_require__(/*! ./engine */ "./src/engine.ts");
+exports.Engine = engine_1.Engine;
+var parser_1 = __webpack_require__(/*! ./parser */ "./src/parser.ts");
+exports.Parser = parser_1.Parser;
+
+
+/***/ }),
+
+/***/ "./src/parser.ts":
+/*!***********************!*\
+  !*** ./src/parser.ts ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Rules = __webpack_require__(/*! ./rules */ "./src/rules/index.ts");
+var Parser = /** @class */ (function () {
+    function Parser(rules) {
+        this.rules = rules.slice();
+    }
+    Parser.prototype.addRule = function (rule) {
+        this.rules.push(rule);
+        return this;
+    };
+    Parser.prototype.parseMarkdown = function (markdown) {
+        var text = markdown;
+        this.rules.forEach(function (rule) {
+            text = rule.applyTo(text);
+        });
+        return text;
+    };
+    Parser.createDefaultParser = function () {
+        var p = new Parser([
+            new Rules.TitleRule(),
+            new Rules.ImageRule(),
+            new Rules.HyperLinkRule(),
+            new Rules.BoldRule(),
+            new Rules.ItalicRule(),
+            new Rules.StrikeRule(),
+            new Rules.QuoteRule(),
+            new Rules.LineRule(),
+            new Rules.InlineCodeRule(),
+            new Rules.ListRule(),
+            new Rules.CodeBlockRule(),
+            new Rules.BlockQuoteRule()
+        ]);
+        return p;
+    };
+    return Parser;
+}());
+exports.Parser = Parser;
+
+
+/***/ }),
+
+/***/ "./src/rules/BlockQuoteRule.ts":
+/*!*************************************!*\
+  !*** ./src/rules/BlockQuoteRule.ts ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var TAG1 = ">";
+var TAG2 = "&gt;";
+var BlockQuoteRule = /** @class */ (function (_super) {
+    __extends(BlockQuoteRule, _super);
+    function BlockQuoteRule() {
+        var _this = this;
+        // super(/^(\t{0,})(\*|-|\d.)\s(.*)/gm);
+        // Preseleziona una lista
+        // imponendo che ci sia almeno una riga vuota prima della lista e che la lista non sia alla fine del file
+        // vedi esempio sotto
+        // const preselectRegex = /\n\n(^(\t{0,})(\*|-|\d.).*\n)+\n?/gm;
+        var preselectRegex = /^((?:&gt;)+|>+)(.*)$/gm;
+        _this = _super.call(this, preselectRegex) || this;
+        _this.maxLevel = 0;
+        return _this;
+    }
+    BlockQuoteRule.prototype.replace = function (match, tag, text) {
+        var level = this.calculateLevel(tag);
+        this.maxLevel = Math.max(level, this.maxLevel);
+        var tagOpen = "<blockquote>";
+        var tagClose = "</blockquote>";
+        var result = tagOpen.repeat(level) + "\n" + text.trim() + "\n" + tagClose.repeat(level);
+        return result;
+    };
+    BlockQuoteRule.prototype.calculateLevel = function (tagSequence) {
+        var tag = tagSequence.startsWith(TAG1) ? TAG1 : "";
+        tag = tagSequence.startsWith(TAG2) ? TAG2 : tag;
+        var validSequence = tag !== "";
+        if (validSequence) {
+            var leftover = tagSequence.substring(tag.length);
+            return 1 + this.calculateLevel(leftover);
+        }
+        else {
+            return 0;
+        }
+    };
+    BlockQuoteRule.prototype.afterReplace = function (text) {
+        for (var i = 1; i <= this.maxLevel; i++) {
+            text = text.replace(/\<\/blockquote>\s?\<blockquote>/gm, "");
+        }
+        return "\n" + text + "\n";
+    };
+    return BlockQuoteRule;
+}(rule_1.ParsingRule));
+exports.BlockQuoteRule = BlockQuoteRule;
+
+
+/***/ }),
+
+/***/ "./src/rules/CodeBlockRule.ts":
+/*!************************************!*\
+  !*** ./src/rules/CodeBlockRule.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var PlainCodeBlockRenderer = /** @class */ (function () {
+    function PlainCodeBlockRenderer() {
+    }
+    PlainCodeBlockRenderer.prototype.renderCode = function (language, code) {
+        return "<pre class=\"" + language + "\">" + code + "</pre>";
+    };
+    return PlainCodeBlockRenderer;
+}());
+exports.PlainCodeBlockRenderer = PlainCodeBlockRenderer;
+var CodeBlockRule = /** @class */ (function (_super) {
+    __extends(CodeBlockRule, _super);
+    function CodeBlockRule(codeRenderer) {
+        if (codeRenderer === void 0) { codeRenderer = new PlainCodeBlockRenderer(); }
+        var _this = _super.call(this, /```([a-z]*)\n([\s\S]*?)\n```/g) || this;
+        _this.codeRenderer = codeRenderer;
+        return _this;
+    }
+    CodeBlockRule.prototype.replace = function (match, language, code) {
+        return this.codeRenderer.renderCode(language, code);
+    };
+    return CodeBlockRule;
+}(rule_1.ParsingRule));
+exports.CodeBlockRule = CodeBlockRule;
+
+
+/***/ }),
+
+/***/ "./src/rules/HyperLinkRule.ts":
+/*!************************************!*\
+  !*** ./src/rules/HyperLinkRule.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var HyperLinkRule = /** @class */ (function (_super) {
+    __extends(HyperLinkRule, _super);
+    function HyperLinkRule() {
+        return _super.call(this, /\[([^[]+)\]\(([^)]+)\)/g) || this;
+    }
+    HyperLinkRule.prototype.replace = function (match, text, href) {
+        return "<a href=\"" + href + "\">" + text + "</a>";
+    };
+    return HyperLinkRule;
+}(rule_1.ParsingRule));
+exports.HyperLinkRule = HyperLinkRule;
+
+
+/***/ }),
+
+/***/ "./src/rules/ImageRule.ts":
+/*!********************************!*\
+  !*** ./src/rules/ImageRule.ts ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var ImageRule = /** @class */ (function (_super) {
+    __extends(ImageRule, _super);
+    function ImageRule() {
+        return _super.call(this, /!\[([^[]+)\]\(([^)]+)\)/g) || this;
+    }
+    ImageRule.prototype.replace = function (text, caption, source) {
+        return "<img src=\"" + source + "\" alt=\"" + caption + "\" />";
+    };
+    return ImageRule;
+}(rule_1.ParsingRule));
+exports.ImageRule = ImageRule;
+
+
+/***/ }),
+
+/***/ "./src/rules/LineRule.ts":
+/*!*******************************!*\
+  !*** ./src/rules/LineRule.ts ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var LineRule = /** @class */ (function (_super) {
+    __extends(LineRule, _super);
+    function LineRule() {
+        return _super.call(this, /\n-{3,}/g) || this;
+    }
+    LineRule.prototype.replace = function () {
+        return "<hr />";
+    };
+    return LineRule;
+}(rule_1.ParsingRule));
+exports.LineRule = LineRule;
+
+
+/***/ }),
+
+/***/ "./src/rules/ListRule.ts":
+/*!*******************************!*\
+  !*** ./src/rules/ListRule.ts ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var ListRule = /** @class */ (function (_super) {
+    __extends(ListRule, _super);
+    function ListRule() {
+        var _this = this;
+        // super(/^(\t{0,})(\*|-|\d.)\s(.*)/gm);
+        // Preseleziona una lista
+        // imponendo che ci sia almeno una riga vuota prima della lista e che la lista non sia alla fine del file
+        // vedi esempio sotto
+        // const preselectRegex = /\n\n(^(\t{0,})(\*|-|\d.).*\n)+\n?/gm;
+        var preselectRegex = /\n?\n?(^(\t{0,})(\*|-|\d.).*\n?)+/gm;
+        _this = _super.call(this, preselectRegex) || this;
+        _this.listRegex = /^(\t{0,})(\*|-|\d.)\s(.*)/gm;
+        _this.maxLevel = 0;
+        _this.replaceList = _this.replaceList.bind(_this);
+        return _this;
+    }
+    ListRule.prototype.replace = function (match) {
+        var result = match.replace(this.listRegex, this.replaceList).trim();
+        return result;
+    };
+    ListRule.prototype.replaceList = function (match, tabs, symbol, text) {
+        var level = tabs.length + 1;
+        this.maxLevel = Math.max(level, this.maxLevel);
+        var listType = symbol === "*" || symbol === "-" ? "ul" : "ol";
+        var tagOpen = "<" + listType + "><li>";
+        var tagClose = "</li></" + listType + ">";
+        var result = tagOpen.repeat(level) + ("<span>" + text + "</span>") + tagClose.repeat(level) + "\n";
+        return result;
+    };
+    ListRule.prototype.afterReplace = function (text) {
+        for (var i = 1; i <= this.maxLevel; i++) {
+            text = text.replace(/\<\/ul>\s*\<ul>/gm, "");
+            text = text.replace(/\<\/ul>\s*\<ol>/gm, "");
+            text = text.replace(/\<\/ol>\s*\<ol>/gm, "");
+            text = text.replace(/\<\/ol>\s*\<ul>/gm, "");
+            text = text.replace(/\<\/li>\s*\<li>\s*\<ul>/gm, "<ul>");
+            text = text.replace(/\<\/li>\s*\<li>\s*\<ol>/gm, "<ol>");
+        }
+        return "\n" + text.trim() + "\n";
+    };
+    return ListRule;
+}(rule_1.ParsingRule));
+exports.ListRule = ListRule;
+/**
+la preselectRegex seleziona solamente la prima e la quarta lista. se non ci fosse il ritorna a capo finale non prenderebbe
+neanche l'ultima
+
+asddasd
+
+* elem 1
+* elem 2
+    - child 1
+        * child 2
+            * child 2
+    * child 2
+
+asd
+        * child 1
+* elem 3
+    * child 1
+
+asd
+
+
+asd
+
+* elem 1
+* elem 2
+    1. child 1
+    2. child 2
+asd
+
+asd
+
+        * child 1
+* elem 3
+    * child 1
+ 
+ */ 
+
+
+/***/ }),
+
+/***/ "./src/rules/TextStyleRules.ts":
+/*!*************************************!*\
+  !*** ./src/rules/TextStyleRules.ts ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var InlineTextRule = /** @class */ (function (_super) {
+    __extends(InlineTextRule, _super);
+    function InlineTextRule(regex, tagOpen, tagClose) {
+        var _this = _super.call(this, regex) || this;
+        _this.tagOpen = tagOpen;
+        _this.tagClose = tagClose;
+        return _this;
+    }
+    InlineTextRule.prototype.replace = function (match, g1) {
+        return "" + this.tagOpen + g1 + this.tagClose;
+    };
+    return InlineTextRule;
+}(rule_1.ParsingRule));
+var BoldRule = /** @class */ (function (_super) {
+    __extends(BoldRule, _super);
+    function BoldRule() {
+        return _super.call(this, /(\*\*|__)(.*?)\1/g) || this;
+    }
+    BoldRule.prototype.replace = function (match, g1, g2) {
+        return "<strong>" + g2 + "</strong>";
+    };
+    return BoldRule;
+}(rule_1.ParsingRule));
+exports.BoldRule = BoldRule;
+var ItalicRule = /** @class */ (function (_super) {
+    __extends(ItalicRule, _super);
+    function ItalicRule() {
+        return _super.call(this, /(\*|_)(.*?)\1/g) || this;
+    }
+    ItalicRule.prototype.replace = function (match, g1, g2) {
+        return "<em>" + g2 + "</em>";
+    };
+    return ItalicRule;
+}(rule_1.ParsingRule));
+exports.ItalicRule = ItalicRule;
+var StrikeRule = /** @class */ (function (_super) {
+    __extends(StrikeRule, _super);
+    function StrikeRule() {
+        return _super.call(this, /~~(.*?)~~/g, "<del>", "</del>") || this;
+    }
+    return StrikeRule;
+}(InlineTextRule));
+exports.StrikeRule = StrikeRule;
+var InlineCodeRule = /** @class */ (function (_super) {
+    __extends(InlineCodeRule, _super);
+    function InlineCodeRule() {
+        return _super.call(this, /`([^`\n]+)`/g, "<code>", "</code>") || this;
+    }
+    return InlineCodeRule;
+}(InlineTextRule));
+exports.InlineCodeRule = InlineCodeRule;
+var QuoteRule = /** @class */ (function (_super) {
+    __extends(QuoteRule, _super);
+    function QuoteRule() {
+        return _super.call(this, /:"(.*?)":/g, "<q>", "</q>") || this;
+    }
+    return QuoteRule;
+}(InlineTextRule));
+exports.QuoteRule = QuoteRule;
+
+
+/***/ }),
+
+/***/ "./src/rules/TitleRule.ts":
+/*!********************************!*\
+  !*** ./src/rules/TitleRule.ts ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var TitleRule = /** @class */ (function (_super) {
+    __extends(TitleRule, _super);
+    function TitleRule() {
+        return _super.call(this, /(#+)(.*)/g) || this;
+    }
+    TitleRule.prototype.replace = function (text, chars, content) {
+        var level = chars.length;
+        return '<h' + level + '>' + content.trim() + '</h' + level + '>';
+    };
+    return TitleRule;
+}(rule_1.ParsingRule));
+exports.TitleRule = TitleRule;
+
+
+/***/ }),
+
+/***/ "./src/rules/index.ts":
+/*!****************************!*\
+  !*** ./src/rules/index.ts ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+exports.ParsingRule = rule_1.ParsingRule;
+var TitleRule_1 = __webpack_require__(/*! ./TitleRule */ "./src/rules/TitleRule.ts");
+exports.TitleRule = TitleRule_1.TitleRule;
+var ImageRule_1 = __webpack_require__(/*! ./ImageRule */ "./src/rules/ImageRule.ts");
+exports.ImageRule = ImageRule_1.ImageRule;
+var TextStyleRules_1 = __webpack_require__(/*! ./TextStyleRules */ "./src/rules/TextStyleRules.ts");
+exports.QuoteRule = TextStyleRules_1.QuoteRule;
+exports.BoldRule = TextStyleRules_1.BoldRule;
+exports.ItalicRule = TextStyleRules_1.ItalicRule;
+exports.StrikeRule = TextStyleRules_1.StrikeRule;
+exports.InlineCodeRule = TextStyleRules_1.InlineCodeRule;
+var HyperLinkRule_1 = __webpack_require__(/*! ./HyperLinkRule */ "./src/rules/HyperLinkRule.ts");
+exports.HyperLinkRule = HyperLinkRule_1.HyperLinkRule;
+var ListRule_1 = __webpack_require__(/*! ./ListRule */ "./src/rules/ListRule.ts");
+exports.ListRule = ListRule_1.ListRule;
+var LineRule_1 = __webpack_require__(/*! ./LineRule */ "./src/rules/LineRule.ts");
+exports.LineRule = LineRule_1.LineRule;
+var CodeBlockRule_1 = __webpack_require__(/*! ./CodeBlockRule */ "./src/rules/CodeBlockRule.ts");
+exports.CodeBlockRule = CodeBlockRule_1.CodeBlockRule;
+var BlockQuoteRule_1 = __webpack_require__(/*! ./BlockQuoteRule */ "./src/rules/BlockQuoteRule.ts");
+exports.BlockQuoteRule = BlockQuoteRule_1.BlockQuoteRule;
+
+
+/***/ }),
+
+/***/ "./src/rules/rule.ts":
+/*!***************************!*\
+  !*** ./src/rules/rule.ts ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ParsingRule = /** @class */ (function () {
+    function ParsingRule(regex) {
+        this.regex = regex;
+    }
+    ParsingRule.prototype.applyTo = function (text) {
+        var replaceResult = text.replace(this.regex, this.replace.bind(this));
+        return this.afterReplace(replaceResult);
+    };
+    ParsingRule.prototype.replace = function (match) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        throw new Error("asd");
+    };
+    ParsingRule.prototype.afterReplace = function (text) {
+        return text;
+    };
+    return ParsingRule;
+}());
+exports.ParsingRule = ParsingRule;
+
+
+/***/ })
+
+/******/ });
+});
 //# sourceMappingURL=bundle.js.map

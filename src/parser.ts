@@ -32,7 +32,8 @@ export class Parser {
             new Rules.LineRule(),
             new Rules.InlineCodeRule(),
             new Rules.ListRule(),
-            new Rules.CodeBlockRule()
+            new Rules.CodeBlockRule(),
+            new Rules.BlockQuoteRule()
         ]);
         return p;
     }
