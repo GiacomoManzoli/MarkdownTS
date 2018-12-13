@@ -2,11 +2,13 @@
   "name": "MarkdownTS",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
+    "setup": "npm install",
     "test": "jest",
-    "dev": "webpack",
-    "watch": "webpack --watch",
+    "dev": "webpack --mode=development",
+    "build": "webpack --mode=production",
+    "watch": "webpack --watch --mode=development",
     "serve": "http-server -p 9001"
   },
   "keywords": [],
