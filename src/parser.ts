@@ -33,6 +33,7 @@ export class Parser {
             new Rules.InlineCodeRule(),
             new Rules.ListRule(),
             new Rules.CodeBlockRule(),
+            new Rules.ExecutableBlockRule(),
             new Rules.BlockQuoteRule()
         ]);
         return p;

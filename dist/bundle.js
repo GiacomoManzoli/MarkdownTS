@@ -178,6 +178,7 @@ var Parser = /** @class */ (function () {
             new Rules.InlineCodeRule(),
             new Rules.ListRule(),
             new Rules.CodeBlockRule(),
+            new Rules.ExecutableBlockRule(),
             new Rules.BlockQuoteRule()
         ]);
         return p;
@@ -289,26 +290,48 @@ var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
 var PlainCodeBlockRenderer = /** @class */ (function () {
     function PlainCodeBlockRenderer() {
     }
-    PlainCodeBlockRenderer.prototype.renderCode = function (language, code) {
+    PlainCodeBlockRenderer.prototype.render = function (block, language, code) {
         return "<pre class=\"" + language + "\">" + code + "</pre>";
     };
     return PlainCodeBlockRenderer;
 }());
 exports.PlainCodeBlockRenderer = PlainCodeBlockRenderer;
-var CodeBlockRule = /** @class */ (function (_super) {
-    __extends(CodeBlockRule, _super);
-    function CodeBlockRule(codeRenderer) {
-        if (codeRenderer === void 0) { codeRenderer = new PlainCodeBlockRenderer(); }
-        var _this = _super.call(this, /```([a-z]*)\n([\s\S]*?)\n```/g) || this;
-        _this.codeRenderer = codeRenderer;
+var RenderableBlockRule = /** @class */ (function (_super) {
+    __extends(RenderableBlockRule, _super);
+    function RenderableBlockRule(matcher, renderer) {
+        var _this = _super.call(this, matcher) || this;
+        _this.renderer = renderer;
         return _this;
     }
-    CodeBlockRule.prototype.replace = function (match, language, code) {
-        return this.codeRenderer.renderCode(language, code);
+    RenderableBlockRule.prototype.replace = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        var _a;
+        return (_a = this.renderer).render.apply(_a, args);
     };
-    return CodeBlockRule;
+    return RenderableBlockRule;
 }(rule_1.ParsingRule));
+exports.RenderableBlockRule = RenderableBlockRule;
+var CodeBlockRule = /** @class */ (function (_super) {
+    __extends(CodeBlockRule, _super);
+    function CodeBlockRule(render) {
+        if (render === void 0) { render = new PlainCodeBlockRenderer(); }
+        return _super.call(this, /```([a-z]*)\n([\s\S]*?)\n```/g, render) || this;
+    }
+    return CodeBlockRule;
+}(RenderableBlockRule));
 exports.CodeBlockRule = CodeBlockRule;
+var ExecutableBlockRule = /** @class */ (function (_super) {
+    __extends(ExecutableBlockRule, _super);
+    function ExecutableBlockRule(render) {
+        if (render === void 0) { render = new PlainCodeBlockRenderer(); }
+        return _super.call(this, /&&&([a-z]*)\n([\s\S]*?)\n&&&/g, render) || this;
+    }
+    return ExecutableBlockRule;
+}(RenderableBlockRule));
+exports.ExecutableBlockRule = ExecutableBlockRule;
 
 
 /***/ }),
@@ -694,6 +717,7 @@ var LineRule_1 = __webpack_require__(/*! ./LineRule */ "./src/rules/LineRule.ts"
 exports.LineRule = LineRule_1.LineRule;
 var CodeBlockRule_1 = __webpack_require__(/*! ./CodeBlockRule */ "./src/rules/CodeBlockRule.ts");
 exports.CodeBlockRule = CodeBlockRule_1.CodeBlockRule;
+exports.ExecutableBlockRule = CodeBlockRule_1.ExecutableBlockRule;
 var BlockQuoteRule_1 = __webpack_require__(/*! ./BlockQuoteRule */ "./src/rules/BlockQuoteRule.ts");
 exports.BlockQuoteRule = BlockQuoteRule_1.BlockQuoteRule;
 

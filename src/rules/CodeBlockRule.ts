@@ -1,24 +1,41 @@
 import { ParsingRule } from "./rule";
 
-export interface CodeBlockRender {
-    renderCode(language: string, code: string) : string;
+export interface BlockRenderer {
+    render(...args: string[]) : string;
 }
 
-export class PlainCodeBlockRenderer implements CodeBlockRender {
-    renderCode(language, code): string {
+export interface CodeBlockRenderer extends BlockRenderer {
+    render(block: string, language: string, code: string): string;
+}
+
+export class PlainCodeBlockRenderer implements CodeBlockRenderer {
+    render(block: string, language: string, code: string): string {
         return `<pre class="${language}">${code}</pre>`;
     }
 }
 
-export class CodeBlockRule extends ParsingRule {
-    codeRenderer: CodeBlockRender;
+export class RenderableBlockRule extends ParsingRule {
+    renderer: BlockRenderer;
 
-    constructor(codeRenderer: CodeBlockRender = new PlainCodeBlockRenderer()) {
-        super(/```([a-z]*)\n([\s\S]*?)\n```/g);
-        this.codeRenderer = codeRenderer;
+    constructor(matcher: RegExp, renderer: BlockRenderer) {
+        super(matcher);
+        this.renderer = renderer;
     }
 
-    replace(match, language, code): string {
-        return this.codeRenderer.renderCode(language, code);
+    replace(...args: string[]): string {
+        return this.renderer.render(...args);
+    }
+}
+
+
+export class CodeBlockRule extends RenderableBlockRule {
+    constructor(render: BlockRenderer = new PlainCodeBlockRenderer()) {
+        super(/```([a-z]*)\n([\s\S]*?)\n```/g, render);
+    }
+}
+
+export class ExecutableBlockRule extends RenderableBlockRule {
+    constructor(render: BlockRenderer = new PlainCodeBlockRenderer()) {
+        super(/&&&([a-z]*)\n([\s\S]*?)\n&&&/g, render);
     }
 }

@@ -5,5 +5,5 @@ export { QuoteRule, BoldRule, ItalicRule, StrikeRule, InlineCodeRule } from "./T
 export { HyperLinkRule } from "./HyperLinkRule";
 export { ListRule } from "./ListRule";
 export { LineRule } from "./LineRule";
-export { CodeBlockRule} from "./CodeBlockRule";
-export { BlockQuoteRule} from "./BlockQuoteRule";
+export { CodeBlockRule, ExecutableBlockRule } from "./CodeBlockRule";
+export { BlockQuoteRule } from "./BlockQuoteRule";
