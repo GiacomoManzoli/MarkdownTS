@@ -14,9 +14,20 @@ export class Parser {
 
     parseMarkdown(markdown: string) : string {
         let text = markdown;
+
+        let history = [];
+
         this.rules.forEach(rule => {
-            text = rule.applyTo(text)   
+            console.log(`Applying rule: ${rule.constructor.name}`);
+            let log = {
+                rule: rule.constructor.name,
+                input: text,
+                output: rule.applyTo(text)
+            };
+            history.push(log);
+            text = log.output;
         })
+        console.table(history);
         return text;
     }
 
@@ -34,7 +45,8 @@ export class Parser {
             new Rules.ListRule(),
             new Rules.CodeBlockRule(),
             new Rules.ExecutableBlockRule(),
-            new Rules.BlockQuoteRule()
+            new Rules.BlockQuoteRule(),
+            new Rules.ParagraphRule(),
         ]);
         return p;
     }

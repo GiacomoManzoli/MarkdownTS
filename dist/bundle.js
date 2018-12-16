@@ -160,9 +160,18 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.parseMarkdown = function (markdown) {
         var text = markdown;
+        var history = [];
         this.rules.forEach(function (rule) {
-            text = rule.applyTo(text);
+            console.log("Applying rule: " + rule.constructor.name);
+            var log = {
+                rule: rule.constructor.name,
+                input: text,
+                output: rule.applyTo(text)
+            };
+            history.push(log);
+            text = log.output;
         });
+        console.table(history);
         return text;
     };
     Parser.createDefaultParser = function () {
@@ -179,7 +188,8 @@ var Parser = /** @class */ (function () {
             new Rules.ListRule(),
             new Rules.CodeBlockRule(),
             new Rules.ExecutableBlockRule(),
-            new Rules.BlockQuoteRule()
+            new Rules.BlockQuoteRule(),
+            new Rules.ParagraphRule(),
         ]);
         return p;
     };
@@ -560,6 +570,48 @@ asd
 
 /***/ }),
 
+/***/ "./src/rules/ParagraphRule.ts":
+/*!************************************!*\
+  !*** ./src/rules/ParagraphRule.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var ParagraphRule = /** @class */ (function (_super) {
+    __extends(ParagraphRule, _super);
+    function ParagraphRule() {
+        return _super.call(this, /^([^\n>&`#<]+.*)$/gm) || this;
+    }
+    ParagraphRule.prototype.replace = function (match, text) {
+        return "\n<p>" + text.trim() + "</p>\n";
+    };
+    ParagraphRule.prototype.afterReplace = function (text) {
+        return text.replace(/<\/p>\s<p>/g, ' ');
+    };
+    return ParagraphRule;
+}(rule_1.ParsingRule));
+exports.ParagraphRule = ParagraphRule;
+
+
+/***/ }),
+
 /***/ "./src/rules/TextStyleRules.ts":
 /*!*************************************!*\
   !*** ./src/rules/TextStyleRules.ts ***!
@@ -720,6 +772,8 @@ exports.CodeBlockRule = CodeBlockRule_1.CodeBlockRule;
 exports.ExecutableBlockRule = CodeBlockRule_1.ExecutableBlockRule;
 var BlockQuoteRule_1 = __webpack_require__(/*! ./BlockQuoteRule */ "./src/rules/BlockQuoteRule.ts");
 exports.BlockQuoteRule = BlockQuoteRule_1.BlockQuoteRule;
+var ParagraphRule_1 = __webpack_require__(/*! ./ParagraphRule */ "./src/rules/ParagraphRule.ts");
+exports.ParagraphRule = ParagraphRule_1.ParagraphRule;
 
 
 /***/ }),
