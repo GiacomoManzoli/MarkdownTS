@@ -1,4 +1,10 @@
 import { HyperLinkRule } from "../HyperLinkRule";
+import { RuleScope } from "../RuleScope";
+
+test("Iinline-scoped", () => {
+    let rule = new HyperLinkRule();
+    expect(rule.getScope()).toEqual(RuleScope.INLINE);    
+});
 
 test("replace works", () => {
     let rule = new HyperLinkRule();

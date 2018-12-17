@@ -1,9 +1,14 @@
 import { ParagraphRule } from "../ParagraphRule";
+import { RuleScope } from "../RuleScope";
 
 
 let rule : ParagraphRule;
 beforeAll(() => {
     rule = new ParagraphRule();
+});
+
+test("Block-scoped", () => {
+    expect(rule.getScope()).toEqual(RuleScope.BLOCK);    
 });
 
 test("Regex base case", () => {

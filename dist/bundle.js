@@ -150,12 +150,28 @@ exports.Parser = parser_1.Parser;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Rules = __webpack_require__(/*! ./rules */ "./src/rules/index.ts");
+function sortRulesByScope(rules) {
+    return rules.sort(function (a, b) {
+        if (a.getScope() < b.getScope()) {
+            return -1;
+        }
+        else if (a.getScope() > b.getScope()) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    });
+}
+exports.sortRulesByScope = sortRulesByScope;
 var Parser = /** @class */ (function () {
     function Parser(rules) {
-        this.rules = rules.slice();
+        if (rules === void 0) { rules = []; }
+        this.rules = sortRulesByScope(rules.slice());
     }
     Parser.prototype.addRule = function (rule) {
         this.rules.push(rule);
+        this.rules = sortRulesByScope(this.rules);
         return this;
     };
     Parser.prototype.parseMarkdown = function (markdown) {
@@ -224,6 +240,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var RuleScope_1 = __webpack_require__(/*! ./RuleScope */ "./src/rules/RuleScope.ts");
 var TAG1 = ">";
 var TAG2 = "&gt;";
 var BlockQuoteRule = /** @class */ (function (_super) {
@@ -237,6 +254,7 @@ var BlockQuoteRule = /** @class */ (function (_super) {
         // const preselectRegex = /\n\n(^(\t{0,})(\*|-|\d.).*\n)+\n?/gm;
         var preselectRegex = /^((?:&gt;)+|>+)(.*)$/gm;
         _this = _super.call(this, preselectRegex) || this;
+        _this.scope = RuleScope_1.RuleScope.BLOCK;
         _this.maxLevel = 0;
         return _this;
     }
@@ -297,6 +315,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var RuleScope_1 = __webpack_require__(/*! ./RuleScope */ "./src/rules/RuleScope.ts");
 var PlainCodeBlockRenderer = /** @class */ (function () {
     function PlainCodeBlockRenderer() {
     }
@@ -310,6 +329,7 @@ var RenderableBlockRule = /** @class */ (function (_super) {
     __extends(RenderableBlockRule, _super);
     function RenderableBlockRule(matcher, renderer) {
         var _this = _super.call(this, matcher) || this;
+        _this.scope = RuleScope_1.RuleScope.BLOCK;
         _this.renderer = renderer;
         return _this;
     }
@@ -370,10 +390,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var RuleScope_1 = __webpack_require__(/*! ./RuleScope */ "./src/rules/RuleScope.ts");
 var HyperLinkRule = /** @class */ (function (_super) {
     __extends(HyperLinkRule, _super);
     function HyperLinkRule() {
-        return _super.call(this, /\[([^[]+)\]\(([^)]+)\)/g) || this;
+        var _this = _super.call(this, /\[([^[]+)\]\(([^)]+)\)/g) || this;
+        _this.scope = RuleScope_1.RuleScope.INLINE;
+        return _this;
     }
     HyperLinkRule.prototype.replace = function (match, text, href) {
         return "<a href=\"" + href + "\">" + text + "</a>";
@@ -409,10 +432,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var RuleScope_1 = __webpack_require__(/*! ./RuleScope */ "./src/rules/RuleScope.ts");
 var ImageRule = /** @class */ (function (_super) {
     __extends(ImageRule, _super);
     function ImageRule() {
-        return _super.call(this, /!\[([^[]+)\]\(([^)]+)\)/g) || this;
+        var _this = _super.call(this, /!\[([^[]+)\]\(([^)]+)\)/g) || this;
+        _this.scope = RuleScope_1.RuleScope.INLINE;
+        return _this;
     }
     ImageRule.prototype.replace = function (text, caption, source) {
         return "<img src=\"" + source + "\" alt=\"" + caption + "\" />";
@@ -448,10 +474,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var RuleScope_1 = __webpack_require__(/*! ./RuleScope */ "./src/rules/RuleScope.ts");
 var LineRule = /** @class */ (function (_super) {
     __extends(LineRule, _super);
     function LineRule() {
-        return _super.call(this, /\n-{3,}/g) || this;
+        var _this = _super.call(this, /\n-{3,}/g) || this;
+        _this.scope = RuleScope_1.RuleScope.BLOCK;
+        return _this;
     }
     LineRule.prototype.replace = function () {
         return "<hr />";
@@ -487,6 +516,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var RuleScope_1 = __webpack_require__(/*! ./RuleScope */ "./src/rules/RuleScope.ts");
 var ListRule = /** @class */ (function (_super) {
     __extends(ListRule, _super);
     function ListRule() {
@@ -501,6 +531,7 @@ var ListRule = /** @class */ (function (_super) {
         _this.listRegex = /^(\t{0,})(\*|-|\d.)\s(.*)/gm;
         _this.maxLevel = 0;
         _this.replaceList = _this.replaceList.bind(_this);
+        _this.scope = RuleScope_1.RuleScope.BLOCK;
         return _this;
     }
     ListRule.prototype.replace = function (match) {
@@ -594,10 +625,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var RuleScope_1 = __webpack_require__(/*! ./RuleScope */ "./src/rules/RuleScope.ts");
 var ParagraphRule = /** @class */ (function (_super) {
     __extends(ParagraphRule, _super);
     function ParagraphRule() {
-        return _super.call(this, /^([^\n>&`#<]+.*)$/gm) || this;
+        var _this = _super.call(this, /^([^\n>&`#<]+.*)$/gm) || this;
+        _this.scope = RuleScope_1.RuleScope.BLOCK;
+        return _this;
     }
     ParagraphRule.prototype.replace = function (match, text) {
         return "\n<p>" + text.trim() + "</p>\n";
@@ -608,6 +642,27 @@ var ParagraphRule = /** @class */ (function (_super) {
     return ParagraphRule;
 }(rule_1.ParsingRule));
 exports.ParagraphRule = ParagraphRule;
+
+
+/***/ }),
+
+/***/ "./src/rules/RuleScope.ts":
+/*!********************************!*\
+  !*** ./src/rules/RuleScope.ts ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var RuleScope;
+(function (RuleScope) {
+    RuleScope[RuleScope["BLOCK"] = 10] = "BLOCK";
+    RuleScope[RuleScope["INLINE"] = 20] = "INLINE";
+    RuleScope[RuleScope["UNSET"] = 30] = "UNSET";
+})(RuleScope = exports.RuleScope || (exports.RuleScope = {}));
+;
 
 
 /***/ }),
@@ -636,12 +691,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var RuleScope_1 = __webpack_require__(/*! ./RuleScope */ "./src/rules/RuleScope.ts");
 var InlineTextRule = /** @class */ (function (_super) {
     __extends(InlineTextRule, _super);
     function InlineTextRule(regex, tagOpen, tagClose) {
         var _this = _super.call(this, regex) || this;
         _this.tagOpen = tagOpen;
         _this.tagClose = tagClose;
+        _this.scope = RuleScope_1.RuleScope.INLINE;
         return _this;
     }
     InlineTextRule.prototype.replace = function (match, g1) {
@@ -652,7 +709,9 @@ var InlineTextRule = /** @class */ (function (_super) {
 var BoldRule = /** @class */ (function (_super) {
     __extends(BoldRule, _super);
     function BoldRule() {
-        return _super.call(this, /(\*\*|__)(.*?)\1/g) || this;
+        var _this = _super.call(this, /(\*\*|__)(.*?)\1/g) || this;
+        _this.scope = RuleScope_1.RuleScope.INLINE;
+        return _this;
     }
     BoldRule.prototype.replace = function (match, g1, g2) {
         return "<strong>" + g2 + "</strong>";
@@ -663,7 +722,9 @@ exports.BoldRule = BoldRule;
 var ItalicRule = /** @class */ (function (_super) {
     __extends(ItalicRule, _super);
     function ItalicRule() {
-        return _super.call(this, /(\*|_)(.*?)\1/g) || this;
+        var _this = _super.call(this, /(\*|_)(.*?)\1/g) || this;
+        _this.scope = RuleScope_1.RuleScope.INLINE;
+        return _this;
     }
     ItalicRule.prototype.replace = function (match, g1, g2) {
         return "<em>" + g2 + "</em>";
@@ -723,10 +784,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var rule_1 = __webpack_require__(/*! ./rule */ "./src/rules/rule.ts");
+var RuleScope_1 = __webpack_require__(/*! ./RuleScope */ "./src/rules/RuleScope.ts");
 var TitleRule = /** @class */ (function (_super) {
     __extends(TitleRule, _super);
     function TitleRule() {
-        return _super.call(this, /(#+)(.*)/g) || this;
+        var _this = _super.call(this, /(#+)(.*)/g) || this;
+        _this.scope = RuleScope_1.RuleScope.BLOCK;
+        return _this;
     }
     TitleRule.prototype.replace = function (text, chars, content) {
         var level = chars.length;
@@ -774,6 +838,8 @@ var BlockQuoteRule_1 = __webpack_require__(/*! ./BlockQuoteRule */ "./src/rules/
 exports.BlockQuoteRule = BlockQuoteRule_1.BlockQuoteRule;
 var ParagraphRule_1 = __webpack_require__(/*! ./ParagraphRule */ "./src/rules/ParagraphRule.ts");
 exports.ParagraphRule = ParagraphRule_1.ParagraphRule;
+var RuleScope_1 = __webpack_require__(/*! ./RuleScope */ "./src/rules/RuleScope.ts");
+exports.RuleScope = RuleScope_1.RuleScope;
 
 
 /***/ }),
@@ -788,10 +854,15 @@ exports.ParagraphRule = ParagraphRule_1.ParagraphRule;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var RuleScope_1 = __webpack_require__(/*! ./RuleScope */ "./src/rules/RuleScope.ts");
 var ParsingRule = /** @class */ (function () {
     function ParsingRule(regex) {
         this.regex = regex;
+        this.scope = RuleScope_1.RuleScope.UNSET;
     }
+    ParsingRule.prototype.getScope = function () {
+        return this.scope;
+    };
     ParsingRule.prototype.applyTo = function (text) {
         var replaceResult = text.replace(this.regex, this.replace.bind(this));
         return this.afterReplace(replaceResult);

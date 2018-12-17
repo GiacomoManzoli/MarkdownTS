@@ -1,8 +1,13 @@
 import { ListRule } from "../ListRule";
+import { RuleScope } from "../RuleScope";
 
 let rule: ListRule;
 beforeEach(() => {
     rule = new ListRule();
+});
+
+test("Block-scoped", () => {
+    expect(rule.getScope()).toEqual(RuleScope.BLOCK);    
 });
 
 test("Calls replaceList", () => {

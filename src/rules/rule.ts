@@ -1,11 +1,18 @@
+import { RuleScope } from "./RuleScope";
+
 export class ParsingRule {
     regex: RegExp;
-
-    constructor(regex:RegExp) {
+    scope: RuleScope;
+    constructor(regex: RegExp) {
         this.regex = regex;
+        this.scope = RuleScope.UNSET;
     }
 
-    applyTo(text: string) : string {
+    getScope(): RuleScope {
+        return this.scope;
+    }
+
+    applyTo(text: string): string {
         const replaceResult = text.replace(this.regex, this.replace.bind(this));
         return this.afterReplace(replaceResult);
     }
@@ -14,7 +21,7 @@ export class ParsingRule {
         throw new Error("asd");
     }
 
-    afterReplace(text: string) : string {
+    afterReplace(text: string): string {
         return text;
     }
 }

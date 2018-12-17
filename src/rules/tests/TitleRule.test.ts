@@ -1,5 +1,10 @@
 import { TitleRule } from '../TitleRule';
+import { RuleScope } from '../RuleScope';
 
+test("Block-quoted", () => {
+    let rule = new TitleRule();
+    expect(rule.getScope()).toEqual(RuleScope.BLOCK);
+})
 
 test("replace works", () => {
     let rule = new TitleRule();

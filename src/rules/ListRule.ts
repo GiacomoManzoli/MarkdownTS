@@ -1,4 +1,5 @@
 import { ParsingRule } from "./rule";
+import { RuleScope } from "./RuleScope";
 
 export class ListRule extends ParsingRule {
     maxLevel: number;
@@ -16,6 +17,7 @@ export class ListRule extends ParsingRule {
         this.listRegex = /^(\t{0,})(\*|-|\d.)\s(.*)/gm
         this.maxLevel = 0;
         this.replaceList = this.replaceList.bind(this);
+        this.scope = RuleScope.BLOCK
     }
 
 

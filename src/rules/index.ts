@@ -8,3 +8,4 @@ export { LineRule } from "./LineRule";
 export { CodeBlockRule, ExecutableBlockRule } from "./CodeBlockRule";
 export { BlockQuoteRule } from "./BlockQuoteRule";
 export { ParagraphRule } from "./ParagraphRule";
+export { RuleScope} from "./RuleScope";

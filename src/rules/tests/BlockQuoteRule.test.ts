@@ -1,8 +1,13 @@
 import { BlockQuoteRule } from "../BlockQuoteRule";
+import { RuleScope } from "../RuleScope";
 
 let rule: BlockQuoteRule;
 beforeEach(() => {
     rule = new BlockQuoteRule();
+});
+
+test("Block-scoped", () => {
+    expect(rule.getScope()).toEqual(RuleScope.BLOCK);
 });
 
 test("Can find a block quote", () => {

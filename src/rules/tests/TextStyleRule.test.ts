@@ -1,4 +1,18 @@
 import { BoldRule, ItalicRule, StrikeRule, InlineCodeRule, QuoteRule } from '../TextStyleRules';
+import { RuleScope } from '../RuleScope';
+
+test("Inline-scoped", () => {
+    let rule = new BoldRule();
+    expect(rule.getScope()).toEqual(RuleScope.INLINE);
+    let rule2 = new ItalicRule();
+    expect(rule2.getScope()).toEqual(RuleScope.INLINE);   
+    let rule3 = new StrikeRule();
+    expect(rule3.getScope()).toEqual(RuleScope.INLINE);   
+    let rule4 = new QuoteRule();
+    expect(rule4.getScope()).toEqual(RuleScope.INLINE); 
+    let rule5 = new InlineCodeRule();
+    expect(rule5.getScope()).toEqual(RuleScope.INLINE);     
+});
 
 test("Bold - replace works", () => {
     let rule = new BoldRule();

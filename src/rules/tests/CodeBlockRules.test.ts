@@ -1,4 +1,12 @@
 import { CodeBlockRule, CodeBlockRenderer, PlainCodeBlockRenderer, ExecutableBlockRule } from "../CodeBlockRule";
+import { RuleScope } from "../RuleScope";
+
+test("Block-scoped", () => {
+    let rule = new CodeBlockRule();
+    expect(rule.getScope()).toEqual(RuleScope.BLOCK);
+    let rule2 = new ExecutableBlockRule();
+    expect(rule2.getScope()).toEqual(RuleScope.BLOCK);
+});
 
 test("replace works with default config", () => {
     let rule = new CodeBlockRule();

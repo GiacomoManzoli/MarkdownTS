@@ -1,14 +1,27 @@
 import * as Rules from "./rules";
 
+export function sortRulesByScope(rules: Rules.ParsingRule[]) {
+    return rules.sort((a,b) => {
+        if (a.getScope() < b.getScope()) {
+            return -1;
+        } else if (a.getScope() > b.getScope()) {
+            return 1;
+        } else {
+            return 0;
+        }
+    });
+}
 
 export class Parser {
     rules: Rules.ParsingRule[];
-    constructor(rules?:Rules.ParsingRule[]) {
-        this.rules = [...rules];
+    
+    constructor(rules:Rules.ParsingRule[] = []) {
+        this.rules = sortRulesByScope([...rules]);
     }
 
     addRule(rule: Rules.ParsingRule) {
         this.rules.push(rule);
+        this.rules = sortRulesByScope(this.rules);
         return this;
     }
 

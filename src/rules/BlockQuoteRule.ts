@@ -1,4 +1,5 @@
 import { ParsingRule } from "./rule";
+import { RuleScope } from "./RuleScope";
 
 const TAG1 = ">";
 const TAG2 = "&gt;"
@@ -14,7 +15,8 @@ export class BlockQuoteRule extends ParsingRule {
         // const preselectRegex = /\n\n(^(\t{0,})(\*|-|\d.).*\n)+\n?/gm;
         const preselectRegex = /^((?:&gt;)+|>+)(.*)$/gm;
 
-        super(preselectRegex)
+        super(preselectRegex);
+        this.scope = RuleScope.BLOCK;
         this.maxLevel = 0;
     }
 

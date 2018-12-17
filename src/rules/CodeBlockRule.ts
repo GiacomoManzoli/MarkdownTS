@@ -1,4 +1,5 @@
 import { ParsingRule } from "./rule";
+import { RuleScope } from "./RuleScope";
 
 export interface BlockRenderer {
     render(...args: string[]) : string;
@@ -19,6 +20,7 @@ export class RenderableBlockRule extends ParsingRule {
 
     constructor(matcher: RegExp, renderer: BlockRenderer) {
         super(matcher);
+        this.scope = RuleScope.BLOCK;
         this.renderer = renderer;
     }
 
