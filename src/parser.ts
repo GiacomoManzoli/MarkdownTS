@@ -14,7 +14,6 @@ export function sortRulesByScope(rules: Rules.ParsingRule[]) {
 
 export class Parser {
     rules: Rules.ParsingRule[];
-    
     constructor(rules:Rules.ParsingRule[] = []) {
         this.rules = sortRulesByScope([...rules]);
     }

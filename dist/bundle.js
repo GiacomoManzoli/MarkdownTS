@@ -483,7 +483,7 @@ var LineRule = /** @class */ (function (_super) {
         return _this;
     }
     LineRule.prototype.replace = function () {
-        return "<hr />";
+        return "\n<hr />";
     };
     return LineRule;
 }(rule_1.ParsingRule));
@@ -526,7 +526,8 @@ var ListRule = /** @class */ (function (_super) {
         // imponendo che ci sia almeno una riga vuota prima della lista e che la lista non sia alla fine del file
         // vedi esempio sotto
         // const preselectRegex = /\n\n(^(\t{0,})(\*|-|\d.).*\n)+\n?/gm;
-        var preselectRegex = /\n?\n?(^(\t{0,})(\*|-|\d.).*\n?)+/gm;
+        // const preselectRegex = /\n?\n?(^(\t{0,})(\*|-|\d.).*\n?)+/gm;
+        var preselectRegex = /\n{0,2}(^(\t{0,})(\*|-|\d.)\s.*\n?)+/gm;
         _this = _super.call(this, preselectRegex) || this;
         _this.listRegex = /^(\t{0,})(\*|-|\d.)\s(.*)/gm;
         _this.maxLevel = 0;
@@ -535,7 +536,7 @@ var ListRule = /** @class */ (function (_super) {
         return _this;
     }
     ListRule.prototype.replace = function (match) {
-        var result = match.replace(this.listRegex, this.replaceList).trim();
+        var result = match.replace(this.listRegex, this.replaceList);
         return result;
     };
     ListRule.prototype.replaceList = function (match, tabs, symbol, text) {
@@ -548,6 +549,7 @@ var ListRule = /** @class */ (function (_super) {
         return result;
     };
     ListRule.prototype.afterReplace = function (text) {
+        console.log("a" + text + "a");
         for (var i = 1; i <= this.maxLevel; i++) {
             text = text.replace(/\<\/ul>\s*\<ul>/gm, "");
             text = text.replace(/\<\/ul>\s*\<ol>/gm, "");
@@ -556,6 +558,8 @@ var ListRule = /** @class */ (function (_super) {
             text = text.replace(/\<\/li>\s*\<li>\s*\<ul>/gm, "<ul>");
             text = text.replace(/\<\/li>\s*\<li>\s*\<ol>/gm, "<ol>");
         }
+        console.log("b" + text + "b");
+        console.log("c" + ("\n" + text.trim() + "\n") + "c");
         return "\n" + text.trim() + "\n";
     };
     return ListRule;
@@ -866,6 +870,8 @@ var ParsingRule = /** @class */ (function () {
     ParsingRule.prototype.applyTo = function (text) {
         var replaceResult = text.replace(this.regex, this.replace.bind(this));
         return this.afterReplace(replaceResult);
+        // const doReplace = () => text.replace(this.regex, this.replace.bind(this));
+        // return this.afterReplace(doReplace());
     };
     ParsingRule.prototype.replace = function (match) {
         var args = [];

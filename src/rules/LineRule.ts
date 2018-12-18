@@ -8,6 +8,6 @@ export class LineRule extends ParsingRule {
     }
 
     replace(): string {
-        return "<hr />"
+        return "\n<hr />";
     }
 }

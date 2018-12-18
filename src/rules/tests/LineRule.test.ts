@@ -9,7 +9,7 @@ test("Block-scoped", () => {
 test("replace works", () => {
     let rule = new LineRule();
     let res = rule.replace();
-    let expected = "<hr />";
+    let expected = "\n<hr />";
     expect(res).toBe(expected);
 })
 

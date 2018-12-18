@@ -2,7 +2,6 @@ import { ParsingRule } from "./rule";
 import { RuleScope } from "./RuleScope";
 
 export class ListRule extends ParsingRule {
-    maxLevel: number;
     listRegex: RegExp;
 
     constructor() {
@@ -11,24 +10,22 @@ export class ListRule extends ParsingRule {
         // imponendo che ci sia almeno una riga vuota prima della lista e che la lista non sia alla fine del file
         // vedi esempio sotto
         // const preselectRegex = /\n\n(^(\t{0,})(\*|-|\d.).*\n)+\n?/gm;
-        const preselectRegex = /\n?\n?(^(\t{0,})(\*|-|\d.).*\n?)+/gm;
-        
+        // const preselectRegex = /\n?\n?(^(\t{0,})(\*|-|\d.).*\n?)+/gm;
+        const preselectRegex = /\n{0,2}(^(\t{0,})(\*|-|\d.)\s.*\n?)+/gm;
         super(preselectRegex)
         this.listRegex = /^(\t{0,})(\*|-|\d.)\s(.*)/gm
-        this.maxLevel = 0;
         this.replaceList = this.replaceList.bind(this);
         this.scope = RuleScope.BLOCK
     }
 
 
     replace(match): string {
-        const result = match.replace(this.listRegex, this.replaceList).trim();
-        return result;
+        const result = match.replace(this.listRegex, this.replaceList);
+        return `\n${result.trim()}\n`;
     }
 
     replaceList(match, tabs: string, symbol: string, text: string): string {
         const level = tabs.length + 1;
-        this.maxLevel = Math.max(level, this.maxLevel);
         const listType = symbol === "*" || symbol === "-" ? "ul" : "ol";
 
         const tagOpen = `<${listType}><li>`;
@@ -36,12 +33,12 @@ export class ListRule extends ParsingRule {
 
         let result = tagOpen.repeat(level) + `<span>${text}</span>` + tagClose.repeat(level) + "\n";
 
-        return result;
+        return this.clearExtraTag(result, level);
     }
 
 
-    afterReplace(text: string): string {
-        for (let i = 1; i <= this.maxLevel; i++) {
+    clearExtraTag(text: string, level: number): string {
+        for (let i = 1; i <= level; i++) {
             text = text.replace(/\<\/ul>\s*\<ul>/gm, "");
             text = text.replace(/\<\/ul>\s*\<ol>/gm, "");
             text = text.replace(/\<\/ol>\s*\<ol>/gm, "");
@@ -50,6 +47,7 @@ export class ListRule extends ParsingRule {
             text = text.replace(/\<\/li>\s*\<li>\s*\<ul>/gm, "<ul>");
             text = text.replace(/\<\/li>\s*\<li>\s*\<ol>/gm, "<ol>");
         }
+
         return `\n${text.trim()}\n`;
     }
 }
