@@ -1,6 +1,7 @@
 import { ParsingRule } from "./rule";
 import { RuleScope } from "./RuleScope";
 import { BlockRenderer, PlainCodeBlockRenderer } from "../renderer";
+import { PrismCodeBlockRenderer } from "../renderer/PrismCodeBlockRenderer";
 
 export class RenderableBlockRule extends ParsingRule {
     renderer: BlockRenderer;
@@ -18,7 +19,7 @@ export class RenderableBlockRule extends ParsingRule {
 
 
 export class CodeBlockRule extends RenderableBlockRule {
-    constructor(render: BlockRenderer = new PlainCodeBlockRenderer()) {
+    constructor(render: BlockRenderer = new PrismCodeBlockRenderer()) {
         super(/```([a-z]*)\n([\s\S]*?)\n```/g, render);
     }
 }

@@ -37,6 +37,23 @@ test("It should support a language different than JS", () => {
     });
 });
 
+test("It should add a special class 'language-not-set' if it's empty", () => {
+    const result = renderer.render("", "", "var x = 1;");
+    
+    const expects = [
+        '<pre class="language-not-set">',
+        '<code class="language-not-set">',
+        "</code>",
+        "</pre>"
+    ];
+
+    expects.forEach(e => {
+        // console.log(e);
+        expect(result.includes(e)).toBeTruthy();
+    });
+});
+
+
 test("It should render plain text if the language isn't supported", () => {
     const result = renderer.render("", "omnis", "Calculate x as 1");
     

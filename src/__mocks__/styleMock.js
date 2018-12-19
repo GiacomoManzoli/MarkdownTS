@@ -1,0 +1,1 @@
+module.exports = {}; // To avoid error with the .css import
