@@ -14,6 +14,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "prismjs": "^1.15.0"
+  },
   "devDependencies": {
     "@types/jest": "^23.3.10",
     "awesome-typescript-loader": "^5.2.1",

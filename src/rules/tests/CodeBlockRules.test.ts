@@ -1,4 +1,5 @@
-import { CodeBlockRule, CodeBlockRenderer, PlainCodeBlockRenderer, ExecutableBlockRule } from "../CodeBlockRule";
+import { CodeBlockRule, ExecutableBlockRule } from "../CodeBlockRule";
+import { CodeBlockRenderer, PlainCodeBlockRenderer } from "../../renderer";
 import { RuleScope } from "../RuleScope";
 
 test("Block-scoped", () => {
@@ -10,10 +11,10 @@ test("Block-scoped", () => {
 
 test("replace works with default config", () => {
     let rule = new CodeBlockRule();
-    rule.renderer.render = jest.fn((m,l,c) => {
+    rule.renderer.render = jest.fn((m, l, c) => {
         return `<pre>${c}</pre>`;
     });
-    let res = rule.replace('','javascript','var x = "asd";');
+    let res = rule.replace('', 'javascript', 'var x = "asd";');
     let expected = "<pre>var x = \"asd\";</pre>";
     expect(res).toBe(expected);
     expect(rule.renderer.render).toBeCalled();
@@ -21,13 +22,13 @@ test("replace works with default config", () => {
 
 test("replace works with custom config", () => {
     class RenderTest implements CodeBlockRenderer {
-        render(m,l,c) {
+        render(m, l, c) {
             return `<${l}>${c}</${l}>`;
         }
     }
 
     let rule = new CodeBlockRule(new RenderTest());
-    let res = rule.replace('','javascript','var x = "asd";');
+    let res = rule.replace('', 'javascript', 'var x = "asd";');
     let expected = "<javascript>var x = \"asd\";</javascript>";
     expect(res).toEqual(expected);
 })
@@ -47,7 +48,7 @@ test("CodeBlockRule - regex", () => {
 
 test("CodeBlockRule - applyTo works", () => {
     let rule = new CodeBlockRule();
-    rule.renderer.render = jest.fn().mockImplementation((m,l,c) => {
+    rule.renderer.render = jest.fn().mockImplementation((m, l, c) => {
         return `<pre>${c}</pre>`;
     });
     let input = "\n```js\nlet x = asd;\n```\n";
@@ -72,7 +73,7 @@ test("ExecutableBlockRule - regex", () => {
 
 test("ExecutableBlockRule - applyTo works", () => {
     let rule = new ExecutableBlockRule();
-    rule.renderer.render = jest.fn().mockImplementation((m,l,c) => {
+    rule.renderer.render = jest.fn().mockImplementation((m, l, c) => {
         return `<pre>${c}</pre>`;
     });
     let input = "\n&&&js\nlet x = asd;\n&&&\n";
@@ -87,6 +88,6 @@ test("ExecutableBlockRule - applyTo works", () => {
 
 test("PlainText renders correctly a code block", () => {
     const r = new PlainCodeBlockRenderer();
-    const res = r.render("","js", "something");
+    const res = r.render("", "js", "something");
     expect(res).toEqual("<pre class=\"js\">something</pre>")
 });

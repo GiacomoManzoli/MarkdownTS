@@ -1,19 +1,6 @@
 import { ParsingRule } from "./rule";
 import { RuleScope } from "./RuleScope";
-
-export interface BlockRenderer {
-    render(...args: string[]) : string;
-}
-
-export interface CodeBlockRenderer extends BlockRenderer {
-    render(block: string, language: string, code: string): string;
-}
-
-export class PlainCodeBlockRenderer implements CodeBlockRenderer {
-    render(block: string, language: string, code: string): string {
-        return `<pre class="${language}">${code}</pre>`;
-    }
-}
+import { BlockRenderer, PlainCodeBlockRenderer } from "../renderer";
 
 export class RenderableBlockRule extends ParsingRule {
     renderer: BlockRenderer;
