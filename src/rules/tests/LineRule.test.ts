@@ -1,10 +1,15 @@
 import { LineRule } from '../LineRule';
+import { RuleScope } from '../RuleScope';
 
+test("Block-scoped", () => {
+    let rule = new LineRule();
+    expect(rule.getScope()).toEqual(RuleScope.BLOCK);    
+});
 
 test("replace works", () => {
     let rule = new LineRule();
     let res = rule.replace();
-    let expected = "<hr />";
+    let expected = "\n<hr />";
     expect(res).toBe(expected);
 })
 

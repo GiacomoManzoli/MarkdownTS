@@ -1,5 +1,10 @@
 import {ImageRule} from '../ImageRule';
+import { RuleScope } from '../RuleScope';
 
+test("Iinline-scoped", () => {
+    let rule = new ImageRule();
+    expect(rule.getScope()).toEqual(RuleScope.INLINE);    
+});
 
 test("replace works", () => {
     let rule = new ImageRule();

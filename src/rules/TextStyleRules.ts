@@ -1,4 +1,5 @@
 import {ParsingRule} from "./rule";
+import { RuleScope } from "./RuleScope";
 
 class InlineTextRule extends ParsingRule {
     tagOpen: string;
@@ -8,6 +9,7 @@ class InlineTextRule extends ParsingRule {
         super(regex);
         this.tagOpen = tagOpen;
         this.tagClose = tagClose;
+        this.scope = RuleScope.INLINE;
     }
 
     replace(match, g1): string {
@@ -18,6 +20,8 @@ class InlineTextRule extends ParsingRule {
 export class BoldRule extends ParsingRule {
     constructor() {
         super(/(\*\*|__)(.*?)\1/g);
+        this.scope = RuleScope.INLINE;
+
     }
 
     replace(match, g1, g2): string {
@@ -28,6 +32,8 @@ export class BoldRule extends ParsingRule {
 export class ItalicRule extends ParsingRule {
     constructor() {
         super(/(\*|_)(.*?)\1/g);
+        this.scope = RuleScope.INLINE;
+
     }
 
     replace(match, g1, g2): string {

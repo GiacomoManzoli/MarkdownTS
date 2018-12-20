@@ -1,24 +1,31 @@
 import { ParsingRule } from "./rule";
+import { RuleScope } from "./RuleScope";
+import { BlockRenderer, PlainCodeBlockRenderer } from "../renderer";
+import { PrismCodeBlockRenderer } from "../renderer/PrismCodeBlockRenderer";
 
-export interface CodeBlockRender {
-    renderCode(language: string, code: string) : string;
-}
+export class RenderableBlockRule extends ParsingRule {
+    renderer: BlockRenderer;
 
-export class PlainCodeBlockRenderer implements CodeBlockRender {
-    renderCode(language, code): string {
-        return `<pre class="${language}">${code}</pre>`;
+    constructor(matcher: RegExp, renderer: BlockRenderer) {
+        super(matcher);
+        this.scope = RuleScope.BLOCK;
+        this.renderer = renderer;
+    }
+
+    replace(...args: string[]): string {
+        return this.renderer.render(...args);
     }
 }
 
-export class CodeBlockRule extends ParsingRule {
-    codeRenderer: CodeBlockRender;
 
-    constructor(codeRenderer: CodeBlockRender = new PlainCodeBlockRenderer()) {
-        super(/```([a-z]*)\n([\s\S]*?)\n```/g);
-        this.codeRenderer = codeRenderer;
+export class CodeBlockRule extends RenderableBlockRule {
+    constructor(render: BlockRenderer = new PrismCodeBlockRenderer()) {
+        super(/```([a-z]*)\n([\s\S]*?)\n```/g, render);
     }
+}
 
-    replace(match, language, code): string {
-        return this.codeRenderer.renderCode(language, code);
+export class ExecutableBlockRule extends RenderableBlockRule {
+    constructor(render: BlockRenderer = new PlainCodeBlockRenderer()) {
+        super(/&&&([a-z]*)\n([\s\S]*?)\n&&&/g, render);
     }
 }
