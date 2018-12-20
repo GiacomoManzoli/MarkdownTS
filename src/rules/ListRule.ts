@@ -3,7 +3,7 @@ import { RuleScope } from "./RuleScope";
 
 export class ListRule extends ParsingRule {
     listRegex: RegExp;
-
+    maxLevel: number;
     constructor() {
         // super(/^(\t{0,})(\*|-|\d.)\s(.*)/gm);
         // Preseleziona una lista
@@ -16,26 +16,35 @@ export class ListRule extends ParsingRule {
         this.listRegex = /^(\t{0,})(\*|-|\d.)\s(.*)/gm
         this.replaceList = this.replaceList.bind(this);
         this.scope = RuleScope.BLOCK
+        this.maxLevel = 0;
     }
 
 
     replace(match): string {
-        const result = match.replace(this.listRegex, this.replaceList);
+        let result = match.replace(this.listRegex, this.replaceList);
+        result = this.clearExtraTag(result, this.maxLevel);
         return `\n${result.trim()}\n`;
     }
 
     replaceList(match, tabs: string, symbol: string, text: string): string {
-        const level = tabs.length + 1;
+        const level = this._calculateLevel(tabs);
+        this._updateMaxLevel(level);
         const listType = symbol === "*" || symbol === "-" ? "ul" : "ol";
 
         const tagOpen = `<${listType}><li>`;
         const tagClose = `</li></${listType}>`;
 
         let result = tagOpen.repeat(level) + `<span>${text}</span>` + tagClose.repeat(level) + "\n";
-
-        return this.clearExtraTag(result, level);
+        return result;
     }
 
+    _calculateLevel(tabs: string): number {
+        return tabs.length + 1;
+    }
+
+    _updateMaxLevel(newLevel: number): void {
+        this.maxLevel = Math.max(newLevel, this.maxLevel);        
+    }
 
     clearExtraTag(text: string, level: number): string {
         for (let i = 1; i <= level; i++) {
@@ -47,7 +56,6 @@ export class ListRule extends ParsingRule {
             text = text.replace(/\<\/li>\s*\<li>\s*\<ul>/gm, "<ul>");
             text = text.replace(/\<\/li>\s*\<li>\s*\<ol>/gm, "<ol>");
         }
-
         return `\n${text.trim()}\n`;
     }
 }
@@ -61,9 +69,9 @@ asddasd
 * elem 1
 * elem 2
 	- child 1
-		* child 2 
-			* child 2 
-	* child 2 
+		* child 2
+			* child 2
+	* child 2
 
 asd
 		* child 1
@@ -78,7 +86,7 @@ asd
 * elem 1
 * elem 2
 	1. child 1
-	2. child 2 
+	2. child 2
 asd
 
 asd
@@ -86,5 +94,5 @@ asd
 		* child 1
 * elem 3
 	* child 1
- 
+
  */

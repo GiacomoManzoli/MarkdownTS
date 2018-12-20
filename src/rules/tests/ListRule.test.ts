@@ -80,11 +80,12 @@ describe("ListRule", () => {
     })
 
     describe("replace", () => {
-        test("Calls replaceList", () => {
+        test("Calls replaceList and clearExtraTag", () => {
             rule.replaceList = jest.fn().mockReturnValue("TEST");
-
+            rule.clearExtraTag = jest.fn().mockReturnValue("");
             rule.replace("\n\t*\tasd\n");
             expect(rule.replaceList).toBeCalled();
+            expect(rule.clearExtraTag).toBeCalled();
         });
 
         test("returns something wrapped by \\n", () => {
@@ -93,9 +94,58 @@ describe("ListRule", () => {
             rule.afterReplace = jest.fn().mockImplementation(x => `\n${x}\n`);
             expect(rule.replace("A")).toEqual("\nA\n");  
         });
+
+        test("Calls clearExtraTag with the right parameters", () => {
+            rule.listRegex = /([\S\s]+)/gm; // Match the whole input
+            const expecetedResult = "RESULT";
+            const expecetedReplaceReult = "TEST";
+            const input = "\n\t*\tasd\n";
+            
+            rule.replaceList = jest.fn().mockReturnValue(expecetedReplaceReult); // Repleace the whole input with TEST 
+            rule.clearExtraTag = jest.fn().mockReturnValue(expecetedResult);
+
+            const result = rule.replace(input);
+            expect(rule.replaceList).toBeCalledWith(input, input, 0, input); // The provided regex should match the whole input
+            expect(rule.clearExtraTag).toBeCalledWith(expecetedReplaceReult, rule.maxLevel);
+            expect(result).toContain(expecetedResult);
+        });
+    });
+
+    describe("Utilities", () => {
+        test("_calculateLevel", () => {
+            expect(rule._calculateLevel("\t\t")).toEqual(3);
+            expect(rule._calculateLevel("")).toEqual(1);
+        });
+
+        test("_updateMaxLevel", () => {
+            expect(rule.maxLevel).toEqual(0);
+            rule._updateMaxLevel(4);
+            expect(rule.maxLevel).toEqual(4);
+            rule._updateMaxLevel(1);
+            expect(rule.maxLevel).toEqual(4);            
+        })
     });
 
     describe("replaceList", () =>{
+        test("Calls _calculateLevel",() => {
+            rule._calculateLevel = jest.fn().mockReturnValue(0);
+            const INPUT = "calculate_level";
+
+            rule.replaceList("", INPUT, "","");
+            expect(rule._calculateLevel).toBeCalledWith(INPUT);
+        });
+
+        test("Calls _updateMaxLevel with the right parameters and uses its return value",() => {
+            const INPUT = "calculate_level";
+            const CALCULATED_LEVEL = 1;
+            rule._calculateLevel = jest.fn().mockReturnValue(CALCULATED_LEVEL);
+            rule._updateMaxLevel = jest.fn().mockReturnValue(undefined);
+
+            rule.replaceList("", INPUT, "","");
+            expect(rule._calculateLevel).toBeCalledWith(INPUT);
+            expect(rule._updateMaxLevel).toBeCalledWith(CALCULATED_LEVEL);
+        });
+
         test("ReplaceList works with *", () => {
             let result = rule.replaceList("", "", "*", "item");
             expect(result).toMatch("<ul><li><span>item</span></li></ul>");
@@ -114,7 +164,7 @@ describe("ListRule", () => {
             expect(result).toMatch("<ul><li><ul><li><ul><li><span>item</span></li></ul></li></ul></li></ul>");
         });
     
-        test("ReplaceList works with -", () => {
+        test("ReplaceList works with 1.", () => {
             let result = rule.replaceList("", "", "1.", "item");
             expect(result).toMatch("<ol><li><span>item</span></li></ol>");
             result = rule.replaceList("", "\t", "1.", "item");
@@ -189,6 +239,7 @@ describe("ListRule", () => {
         `;
             let expeceted = `\n<ol><li><span>elem 1</span></li><li><span>elem 2</span><ul><li><span>child 3</span><ul><li><span>child 4</span><ol><li><span>child 5</span></li><li><span>6</span></li></ol></li><li><span>5</span><ul><li><span>61</span></li></ul></li></ul></li></ul></li><li><span>elem 3</span></li></ol>\n`;
             let result = rule.clearExtraTag(input,4);
+            // console.log(result);
             expect(result).toEqual(expeceted);
         });
     })
@@ -199,7 +250,6 @@ describe("ListRule", () => {
     
             const output = rule.applyTo(input);
     
-            // console.log("a"+output+"a");
     
             const expects = [
                 "a",
